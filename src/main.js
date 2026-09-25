@@ -10,7 +10,7 @@ const gallery=imgs.slice(1,7);
 
 document.querySelector('#app').innerHTML=`
 <header class="header"><a class="brand" href="#top">MONIZ<span>OURIVESARIA</span></a><nav><a href="#vender">Comprar ouro</a><a href="#lojas">Lojas</a><a href="#experiencia">Experiência</a><a href="#contacto">Contacto</a></nav><a class="phone" href="tel:+244942516456">942 516 456</a><button class="menu" aria-label="Menu">☰</button></header>
-<main id="top">
+<div class="ambient"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="cursor-glow"></div><main id="top">
 <section class="hero"><div class="hero-bg" style="background-image:url('${hero}')"></div><div class="grain"></div><div class="hero-content"><p class="eyebrow">LUANDA · ANGOLA</p><h1>O brilho que<br><em>valoriza</em> o que é seu.</h1><p class="lead">Compra de ouro com atendimento próximo, discreto e profissional.</p><div class="actions"><a class="btn btn-gold" href="#lojas">Ver nossas lojas <span>↗</span></a><a class="btn btn-ghost" href="#vender">Tenho ouro para vender</a></div></div><div class="hero-orb"></div><div class="scroll">SCROLL <span>↓</span></div></section>
 <section class="sell section" id="vender"><div class="section-kicker">01 / COMPRA DE OURO</div><div class="sell-grid"><div><h2>Tem ouro para<br><em>vender?</em></h2></div><div><p class="big-copy">Transforme o que já não usa em valor. Fale diretamente com a Ourivesaria Moniz e descubra como podemos ajudar.</p><a class="text-link" href="https://wa.me/244942516456" target="_blank">Falar pelo WhatsApp <span>↗</span></a></div></div></section>
 <section class="gallery section" id="experiencia"><div class="section-head"><div><div class="section-kicker">02 / MONIZ</div><h2>Detalhes que<br><em>falam por si.</em></h2></div><p>Uma seleção das nossas peças e do universo Moniz.</p></div><div class="masonry">${gallery.map((im,i)=>`<figure class="tile tile-${i+1}" data-tilt><img src="${im}" alt="Peça e ambiente Ourivesaria Moniz" loading="lazy"/><span>0${i+1}</span></figure>`).join('')}</div></section>
@@ -22,6 +22,15 @@ document.querySelector('#app').innerHTML=`
 async function loadStores(){const {data,error}=await supabase.from('stores').select('*').order('sort_order');const list=document.querySelector('#stores-list');if(error){list.innerHTML='<p>Consulte-nos pelo 942 516 456 para localização das lojas.</p>';return}list.innerHTML=data.map((s,i)=>`<article class="store"><span>0${i+1}</span><div><h3>${s.name}</h3><p>${s.address}</p></div><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.name+' '+s.address+', Luanda, Angola')}" target="_blank">Mapa ↗</a></article>`).join('')}
 loadStores();
 
+
+// Live cinematic motion
+const glow=document.querySelector('.cursor-glow');
+window.addEventListener('pointermove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'}, {passive:true});
+const ambient=document.querySelector('.ambient');
+for(let i=0;i<24;i++){const p=document.createElement('i');p.style.setProperty('--x',Math.random()*100+'%');p.style.setProperty('--y',Math.random()*100+'%');p.style.setProperty('--d',(5+Math.random()*9)+'s');p.style.setProperty('--s',(1+Math.random()*3)+'px');ambient.appendChild(p)}
+const heroEl=document.querySelector('.hero');
+heroEl.addEventListener('pointermove',e=>{const r=heroEl.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;heroEl.style.setProperty('--mx',x);heroEl.style.setProperty('--my',y)}, {passive:true});
+heroEl.addEventListener('pointerleave',()=>{heroEl.style.setProperty('--mx',0);heroEl.style.setProperty('--my',0)});
 const header=document.querySelector('.header');window.addEventListener('scroll',()=>header.classList.toggle('scrolled',scrollY>30),{passive:true});
 document.querySelectorAll('[data-tilt]').forEach(el=>{el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`perspective(900px) rotateY(${x*5}deg) rotateX(${-y*5}deg) translateY(-4px)`});el.addEventListener('pointerleave',()=>el.style.transform='')});
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in') }),{threshold:.12});document.querySelectorAll('.section,.store,.tile').forEach(e=>io.observe(e));
