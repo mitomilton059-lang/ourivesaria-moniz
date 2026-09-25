@@ -11,7 +11,17 @@ const gallery=imgs.slice(1,7);
 document.querySelector('#app').innerHTML=`
 <header class="header canva-header"><a class="brand canva-brand" href="#top">OURIVESARIA MONIZ</a><nav><a href="#top">Início</a><a href="#experiencia">Coleções</a><a href="#manifesto">Sobre</a><a href="#lojas">Lojas</a><a href="#contacto">Contacto</a></nav><a class="phone" href="tel:+244942516456">942 516 456</a><button class="menu" aria-label="Menu">☰</button></header>
 <div class="ambient"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="cursor-glow"></div><main id="top">
-<section class="hero canva-hero"><div class="hero-bg" style="background-image:url('${hero}')"></div><div class="hero-overlay"></div><div class="grain"></div><div class="canva-frame"></div><div class="hero-content canva-content"><p class="eyebrow">OURIVESARIA MONIZ</p><h1>O brilho que<br><em>valoriza o que é seu.</em></h1><p class="lead">Matéria, Brilho, Confiança.</p><div class="canva-intro">Transformamos metais preciosos em expressões de beleza atemporal. Cada peça nasce do encontro entre tradição, precisão e paixão.</div><div class="actions"><a class="btn btn-gold" href="#lojas">Ver nossas lojas <span>↗</span></a><a class="btn btn-glass" href="#vender">Comprar ouro <span>↗</span></a></div></div><div class="canva-side"><span>LUANDA · ANGOLA</span><b>01 — 05</b></div><div class="canva-scroll">SCROLL <span>↓</span></div></section>
+<section class="hero moniz-home">
+  <div class="home-bg" style="background-image:url('${hero}')"></div>
+  <div class="home-vignette"></div><div class="home-lines"></div><div class="home-topline"></div>
+  <div class="home-content"><p class="home-kicker">OURIVESARIA</p><h1>OURIVESARIA<br><span>MONIZ</span></h1><p class="home-tagline">O brilho que valoriza o que é seu.</p>
+  <div class="home-actions"><a class="home-btn" href="#lojas">Ver nossas lojas <b>✦</b></a><a class="home-btn" href="#vender">Comprar ouro <b>✦</b></a></div></div>
+  <div class="hero-3d" data-hero3d><div class="hero-3d-shadow"></div><div class="hero-3d-image" style="background-image:url('${hero}')"></div><div class="hero-3d-reflection"></div><div class="hero-3d-ring ring-one"></div><div class="hero-3d-ring ring-two"></div></div>
+  <div class="home-edge home-edge-left"></div><div class="home-edge home-edge-right"></div><div class="home-scroll">SCROLL <span>↓</span></div>
+</section>
+<section class="moniz-intro"><div class="intro-title">MATÉRIA, BRILHO, CONFIANÇA.</div><div class="intro-divider"></div><p>Transformamos metais preciosos em expressões de beleza atemporal. Cada peça nasce do encontro entre tradição, precisão e paixão.</p></section>
+<section class="moniz-visual-strip" id="experiencia">${gallery.slice(0,5).map((im,i)=>`<figure><img src="${im}" alt="Ourivesaria Moniz — peça ${i+1}" loading="lazy"><span>0${i+1}</span></figure>`).join('')}</section>
+<section class="moniz-stores-preview" id="lojas">${[1,2,3,4,5].map(n=>`<a href="#lojas" class="mini-store"><span class="dot"></span><strong>LOJA 0${n}</strong><small>LUANDA</small></a>`).join('')}</section>
 <section class="sell section" id="vender"><div class="section-kicker">01 / COMPRA DE OURO</div><div class="sell-grid"><div><h2>Tem ouro para<br><em>vender?</em></h2></div><div><p class="big-copy">Transforme o que já não usa em valor. Fale diretamente com a Ourivesaria Moniz e descubra como podemos ajudar.</p><a class="text-link" href="https://wa.me/244942516456" target="_blank">Falar pelo WhatsApp <span>↗</span></a></div></div></section>
 <section class="gallery section" id="experiencia"><div class="section-head"><div><div class="section-kicker">02 / MONIZ</div><h2>Detalhes que<br><em>falam por si.</em></h2></div><p>Uma seleção das nossas peças e do universo Moniz.</p></div><div class="masonry">${gallery.map((im,i)=>`<figure class="tile tile-${i+1}" data-tilt><img src="${im}" alt="Peça e ambiente Ourivesaria Moniz" loading="lazy"/><span>0${i+1}</span></figure>`).join('')}</div></section>
 <section class="stores section" id="lojas"><div class="section-kicker">03 / ONDE ENCONTRAR</div><div class="stores-title"><h2>5 lojas.<br><em>Uma só Moniz.</em></h2><p>Estamos em pontos estratégicos de Luanda para estar mais perto de si.</p></div><div id="stores-list" class="stores-list"></div></section>
@@ -34,3 +44,9 @@ heroEl.addEventListener('pointerleave',()=>{heroEl.style.setProperty('--mx',0);h
 const header=document.querySelector('.header');window.addEventListener('scroll',()=>header.classList.toggle('scrolled',scrollY>30),{passive:true});
 document.querySelectorAll('[data-tilt]').forEach(el=>{el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`perspective(900px) rotateY(${x*5}deg) rotateX(${-y*5}deg) translateY(-4px)`});el.addEventListener('pointerleave',()=>el.style.transform='')});
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in') }),{threshold:.12});document.querySelectorAll('.section,.store,.tile').forEach(e=>io.observe(e));
+
+const hero3d=document.querySelector('[data-hero3d]');
+if(hero3d){
+  hero3d.addEventListener('pointermove',e=>{const r=hero3d.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;hero3d.style.setProperty('--rx',(-y*9)+'deg');hero3d.style.setProperty('--ry',(x*11)+'deg');hero3d.style.setProperty('--px',(x*18)+'px');hero3d.style.setProperty('--py',(y*14)+'px')},{passive:true});
+  hero3d.addEventListener('pointerleave',()=>{hero3d.style.setProperty('--rx','0deg');hero3d.style.setProperty('--ry','0deg');hero3d.style.setProperty('--px','0px');hero3d.style.setProperty('--py','0px')});
+}
